@@ -22,18 +22,18 @@ class Evaluator:
         loss_avg = 0.0
         pred_list, gt_list = [], []
         with torch.no_grad():
-            for batch in data_loader:
-                data = batch['data'].cuda()
+            for data, target in data_loader:
+                data = data.cuda()
                 logits = self.net(data)
                 prob = torch.sigmoid(logits)
-                target = batch['soft_label'].cuda()
+                target = target.cuda()
                 loss = F.binary_cross_entropy(prob, target, reduction='sum')
                 loss_avg += float(loss.data)
                 # gather prediction and gt
                 pred = torch.topk(prob.data, self.k)[1]
                 pred = pred.cpu().detach().tolist()
                 pred_list.extend(pred)
-                for soft_label in batch['soft_label']:
+                for soft_label in target:
                     gt_label = (soft_label == 1).nonzero(as_tuple=True)[0]\
                                 .cpu().detach().tolist()
                     gt_list.append(gt_label)
@@ -66,8 +66,8 @@ class Evaluator:
 
         pred_list = []
         with torch.no_grad():
-            for batch in data_loader:
-                data = batch['data'].cuda()
+            for data, _ in data_loader:
+                data = data.cuda()
                 logits = self.net(data)
                 prob = torch.sigmoid(logits)
                 pred = torch.topk(prob.data, self.k)[1]

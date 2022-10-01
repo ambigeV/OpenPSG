@@ -63,22 +63,20 @@ class PSGClsDataset(Dataset):
         return len(self.imglist)
 
     def __getitem__(self, index):
-        sample = self.imglist[index]
-        path = os.path.join(self.root, sample['file_name'])
+        # sample = self.imglist[index]
+        path = os.path.join(self.root, self.imglist[index]['file_name'])
         try:
             with open(path, 'rb') as f:
                 content = f.read()
                 filebytes = content
                 buff = io.BytesIO(filebytes)
                 image = Image.open(buff).convert('RGB')
-                sample['data'] = self.transform_image(image)
+                sample = self.transform_image(image)
         except Exception as e:
             logging.error('Error, cannot read [{}]'.format(path))
             raise e
         # Generate Soft Label
         soft_label = torch.Tensor(self.num_classes)
         soft_label.fill_(0)
-        soft_label[sample['relations']] = 1
-        sample['soft_label'] = soft_label
-        del sample['relations']
-        return sample
+        soft_label[self.imglist[index]['relations']] = 1
+        return sample, soft_label

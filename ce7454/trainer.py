@@ -48,15 +48,18 @@ class BaseTrainer:
 
         for train_step in tqdm(range(1, len(train_dataiter) + 1)):
             # for train_step in tqdm(range(1, 5)):
-            batch = next(train_dataiter)
-            data = batch['data'].cuda()
-            target = batch['soft_label'].cuda()
+            data, target = next(train_dataiter)
+            data = data.cuda()
+            target = target.cuda()
             # forward
             logits = self.net(data)
+            del data
             loss = F.binary_cross_entropy_with_logits(logits,
                                                       target,
                                                       reduction='sum')
             # backward
+            del target
+            del logits
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
