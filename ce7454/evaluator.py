@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from focalloss import FocalLossV1 as FocalLoss
 from torch.utils.data import DataLoader
 
 
@@ -27,7 +28,8 @@ class Evaluator:
                 logits = self.net(data)
                 prob = torch.sigmoid(logits)
                 target = target.cuda()
-                loss = F.binary_cross_entropy(prob, target, reduction='sum')
+                #loss = F.binary_cross_entropy(prob, target, reduction='sum')
+                loss = FocalLoss(logits, target, reduction="sum")
                 loss_avg += float(loss.data)
                 # gather prediction and gt
                 pred = torch.topk(prob.data, self.k)[1]

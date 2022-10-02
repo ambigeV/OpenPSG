@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
+from focalloss import FocalLossV1 as FocalLoss
 from tqdm import tqdm
 
 
@@ -54,9 +55,10 @@ class BaseTrainer:
             # forward
             logits = self.net(data)
             del data
-            loss = F.binary_cross_entropy_with_logits(logits,
-                                                      target,
-                                                      reduction='sum')
+            #loss = F.binary_cross_entropy_with_logits(logits,
+            #                                          target,
+            #                                          reduction='sum')
+            loss = FocalLoss(logits,target,reduction="sum")
             # backward
             del target
             del logits
