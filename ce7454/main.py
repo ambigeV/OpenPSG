@@ -10,10 +10,10 @@ from torchvision.models import resnet50
 from trainer import BaseTrainer
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model_name', type=str, default='res50')
+parser.add_argument('--model_name', type=str, default='focal_alpha0.25_res50')
 parser.add_argument('--epoch', type=int, default=36)
 parser.add_argument('--lr', type=float, default=0.001)
-parser.add_argument('--batch_size', type=int, default=16)
+parser.add_argument('--batch_size', type=int, default=8)
 parser.add_argument('--momentum', type=float, default=0.9)
 parser.add_argument('--weight_decay', type=float, default=0.0005)
 
