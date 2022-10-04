@@ -29,7 +29,8 @@ class Evaluator:
                 prob = torch.sigmoid(logits)
                 target = target.cuda()
                 #loss = F.binary_cross_entropy(prob, target, reduction='sum')
-                loss = FocalLoss(logits, target, reduction="sum")
+                loss_fn = FocalLoss(reduction="sum")
+                loss = loss_fn(logits, target)
                 loss_avg += float(loss.data)
                 # gather prediction and gt
                 pred = torch.topk(prob.data, self.k)[1]

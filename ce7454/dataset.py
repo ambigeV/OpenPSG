@@ -11,6 +11,7 @@ from torch.utils.data import Dataset
 # to fix "OSError: image file is truncated"
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+input_size = (667, 400)
 
 class Convert:
     def __init__(self, mode='RGB'):
@@ -25,9 +26,11 @@ def get_transforms(stage: str):
     if stage == 'train':
         return trn.Compose([
             Convert('RGB'),
-            trn.Resize((1333, 800)),
+            #trn.Resize((1333, 800)),
+            trn.Resize(input_size),
             trn.RandomHorizontalFlip(),
-            trn.RandomCrop((1333, 800), padding=4),
+            trn.RandAugment(),
+            #trn.RandomCrop((1333, 800), padding=4),
             trn.ToTensor(),
             trn.Normalize(mean, std),
         ])
@@ -35,7 +38,8 @@ def get_transforms(stage: str):
     elif stage in ['val', 'test']:
         return trn.Compose([
             Convert('RGB'),
-            trn.Resize((1333, 800)),
+            #trn.Resize((1333, 800)),
+            trn.Resize(input_size),
             trn.ToTensor(),
             trn.Normalize(mean, std),
         ])

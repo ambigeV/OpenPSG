@@ -58,7 +58,8 @@ class BaseTrainer:
             #loss = F.binary_cross_entropy_with_logits(logits,
             #                                          target,
             #                                          reduction='sum')
-            loss = FocalLoss(logits, target, reduction="sum")
+            loss_fn = FocalLoss(reduction="sum")
+            loss = loss_fn(logits, target)
             # backward
             del target
             del logits
