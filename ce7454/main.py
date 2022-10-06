@@ -5,7 +5,7 @@ import torch
 from dataset import PSGClsDataset
 from evaluator import Evaluator
 from torch.utils.data import DataLoader
-from torchvision.models import resnet50
+from torchvision.models import resnet50, swin_t
 from trainer import BaseTrainer
 
 parser = argparse.ArgumentParser()
@@ -17,6 +17,8 @@ parser.add_argument('--momentum', type=float, default=0.9)
 parser.add_argument('--weight_decay', type=float, default=0.0005)
 
 args = parser.parse_args()
+
+
 
 savename = f'{args.model_name}_e{args.epoch}_lr{args.lr}_bs{args.batch_size}_m{args.momentum}_wd{args.weight_decay}'
 os.makedirs('./checkpoints', exist_ok=True)
@@ -48,6 +50,11 @@ print('Data Loaded...', flush=True)
 model = resnet50(pretrained=True)
 model.fc = torch.nn.Linear(2048, 56)
 model.cuda()
+
+model = swin_t(weights="Swin_T_Weights.IMAGENET1K_V1")
+model = torch.nn.Linear(768, 56)
+model.cuda()
+
 print('Model Loaded...', flush=True)
 
 # loading trainer
