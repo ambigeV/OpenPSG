@@ -18,8 +18,6 @@ parser.add_argument('--weight_decay', type=float, default=0.0005)
 
 args = parser.parse_args()
 
-
-
 savename = f'{args.model_name}_e{args.epoch}_lr{args.lr}_bs{args.batch_size}_m{args.momentum}_wd{args.weight_decay}'
 os.makedirs('./checkpoints', exist_ok=True)
 os.makedirs('./results', exist_ok=True)
@@ -49,10 +47,6 @@ print('Data Loaded...', flush=True)
 # loading model
 model = resnet50(pretrained=True)
 model.fc = torch.nn.Linear(2048, 56)
-model.cuda()
-
-model = swin_t(weights="Swin_T_Weights.IMAGENET1K_V1")
-model = torch.nn.Linear(768, 56)
 model.cuda()
 
 print('Model Loaded...', flush=True)
